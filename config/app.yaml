@@ -1,0 +1,14 @@
+version: 1.0
+
+srvname: 'Shared-Srv'
+
+host: 'wx.jiangqiu.com'
+
+wechat:
+  appId: wx28053319a0479029
+  secret: 3bd93668e6226da5210d5e2a199c1792
+  token: WZLmxSDzL38g7RkfXg3s3Gw33d323TUf
+  verify: 0qrTGk8d6YVuIoB9
+  mchId: '1606652374'
+  partnerKey: D9vj90wy8dJSShsu90v0ij83lx8Nq6d9
+  notify_url: 'http://wx.jiangqiu.com/srv/transition/pay/success/of/wechat'

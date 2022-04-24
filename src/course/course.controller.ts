@@ -1,0 +1,74 @@
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiParam } from '@nestjs/swagger';
+import { BackendApi } from 'src/auth/guard';
+import { BatchRemoveDTO, CreateCourseDTO } from './course.dto';
+import { CourseService } from './course.service';
+
+@Controller('courses')
+export class CourseController {
+    constructor(private readonly courseService: CourseService) {}
+
+    @Get('/list')
+    @BackendApi()
+    @ApiOperation({ summary: '获取用户列表' })
+    @ApiParam({
+        name: 'categoryKey',
+        required: true,
+        description: '分类'
+    })
+    @ApiParam({
+        name: 'courseName',
+        required: false,
+        description: '课程名称'
+    })
+    async getListByPager(
+        @Query('page') page: number,
+        @Query('pageSize') pageSize: number,
+        @Query('categoryKey') categoryKey: string,
+        @Query('courseName') courseName: string,
+    ) {
+        const result = await this.courseService.findListByPagination({
+            page,
+            pageSize,
+            categoryKey,
+            courseName,
+        });
+
+        return result;
+    }
+
+    @Get('/listByCategory')
+    @ApiOperation({ summary: '通过分类获取所有列表'})
+    @ApiParam({
+        name: 'categoryKey',
+        required: true,
+        description: '分类'
+    })
+    async getAllList(
+        @Query('categoryKey') categoryKey: string,
+    ) {
+        const result = await this.courseService.findListByCategory({
+            categoryKey,
+        });
+
+        return result;
+    }
+
+    @Delete('/batch')
+    @BackendApi()
+    @ApiOperation({ summary: '删除' })
+    async batchRemove(@Body() dto: BatchRemoveDTO) {
+        await this.courseService.batchRemoveCourse(dto.ids);
+
+        return dto.ids;
+    }
+
+    @Post('/createOne')
+    @BackendApi()
+    @ApiOperation({ summary: '新增课程' })
+    async createOne(@Body() dto: CreateCourseDTO) {
+        const one = await this.courseService.createOneCourse(dto);
+
+        return one;
+    }
+}

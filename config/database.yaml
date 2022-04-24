@@ -1,0 +1,9 @@
+address: localhost
+
+database: shared
+
+username: root
+
+password: qazWSX123=-
+
+port: 3306

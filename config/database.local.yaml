@@ -1,0 +1,9 @@
+address: 172.30.96.226
+
+database: onlyoffice
+
+username: onlyoffice_user
+
+password: onlyoffice_pass
+
+port: 33006
