@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam } from '@nestjs/swagger';
 import { BackendApi } from 'src/auth/guard';
+import Ability from 'src/constanst/ability';
+import TrainingCategory, { getCategoryByKey } from 'src/constanst/trainingCategory';
 import { BatchRemoveDTO, CreateCourseDTO } from './course.dto';
 import { CourseService } from './course.service';
 
@@ -34,7 +36,17 @@ export class CourseController {
             courseName,
         });
 
-        return result;
+        return {
+            ...result,
+            list: result.list.map((item) => {
+                const category = getCategoryByKey(item.categoryKey) ?? {};
+                return {
+                    ...item,
+                    category,
+                    categoryName: category.name
+                }
+            })
+        };
     }
 
     @Get('/listByCategory')
@@ -51,7 +63,14 @@ export class CourseController {
             categoryKey,
         });
 
-        return result;
+        return result.map((item) => {
+            const category = getCategoryByKey(item.categoryKey) ?? {};
+            return {
+                ...item,
+                category,
+                categoryName: category.name
+            }
+        });
     }
 
     @Delete('/batch')
@@ -70,5 +89,21 @@ export class CourseController {
         const one = await this.courseService.createOneCourse(dto);
 
         return one;
+    }
+    
+    @Get('/ability/category')
+    @BackendApi()
+    @ApiOperation({ summary: '获取能力总表' })
+    async getAllAbilityCategory() {
+        return Ability;
+    }
+
+    @Get('/training/category')
+    @BackendApi()
+    @ApiOperation({ summary: '获取培训分类' })
+    async getTrainingCategory() {
+        return {
+            trainingCategory: TrainingCategory,
+        };
     }
 }

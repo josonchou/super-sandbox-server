@@ -24,10 +24,14 @@ export class CourseService {
 
         let queryBuilder = this.courseRepository
             .createQueryBuilder('course')
-            .where('course.delete_at IS NULL')
-            .andWhere('course.categoryKey = :categoryKey', {
+            .where('course.delete_at IS NULL');
+            
+
+        if (query.categoryKey) {
+            queryBuilder.andWhere('course.categoryKey = :categoryKey', {
                 categoryKey: query.categoryKey,
             });
+        }
 
         if (query.courseName) {
             queryBuilder.andWhere('course.courseName LIKE :keywords', {

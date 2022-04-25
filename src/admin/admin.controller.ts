@@ -9,6 +9,8 @@ import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { ApiBan, AuthPublic } from 'src/auth';
 import { BackendApi } from 'src/auth/guard';
+import Ability from 'src/constanst/ability';
+import TrainingCategory from 'src/constanst/trainingCategory';
 import { BatchRemoveUsers, CreateUserDTO, UpdateAdminPasswordDTO } from './admin.dto';
 import { Admin } from './admin.entity';
 import { AdminService } from './admin.service';
@@ -52,7 +54,11 @@ export class AdminController {
 
     const admin = await this.adminService.getAdminInfo(loginAdmin.id);
 
-    return admin;
+    return {
+      userInfo: admin,
+      ability: Ability,
+      trainingCategory: TrainingCategory,
+    };
   }
 
   @Post('/users')
