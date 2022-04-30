@@ -15,8 +15,8 @@ services:
     expose:
       - 3306
     volumes:
-      - ../config/mysql/conf.d:/etc/mysql/conf.d
-      - ../config/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./config/mysql/conf.d:/etc/mysql/conf.d
+      - ./config/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./data/db:/var/lib/mysql
   onlyoffice-document-server:
     container_name: onlyoffice-document-server
@@ -40,7 +40,7 @@ services:
     volumes:
        - ./data/document_data:/var/www/onlyoffice/Data
        - ./data/logs/document_server:/var/log/onlyoffice
-       - ../assets/fonts:/usr/share/fonts/truetype/custom
+       - ./assets/fonts:/usr/share/fonts/truetype/custom
        - ./data/document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
   onlyoffice-control-panel:
     container_name: onlyoffice-control-panel
@@ -66,11 +66,15 @@ services:
     depends_on:
       - onlyoffice-document-server
       - onlyoffice-mysql-server
-    build: ./api-server/
+    build: ./
     expose:
       - '3000'
+    ports:
+      - '3000:3000'
     networks:
       - onlyoffice
+    volumes:
+      - ./config:/usr/app/config
   # super-sandbox-nginx:
   #   container_name: super-sandbox-nginx
   #   image: nginx:1.21.6

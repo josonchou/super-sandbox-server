@@ -1,4 +1,4 @@
-address: localhost
+address: onlyoffice-mysql-server
 
 database: onlyoffice
 
@@ -6,4 +6,4 @@ username: onlyoffice_user
 
 password: onlyoffice_pass
 
-port: 33006
+port: 3306

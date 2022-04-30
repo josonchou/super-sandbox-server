@@ -7,14 +7,20 @@ WORKDIR /usr/app
 
 COPY package*.json ./
 
-RUN npm install
+COPY yarn*.lock ./
+
+RUN npm config set registry https://registry.npm.taobao.org && \
+    npm config set disturl https://npm.taobao.org/dist && \
+    npm config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs
+
+RUN yarn install
 
 COPY . .
 
 RUN npm run build
 
 
-VOLUME /usr/app/config /usr/app/storage
+VOLUME /usr/app/config /usr/app/storage /usr/app/node_modules
 
 EXPOSE 3000
 
