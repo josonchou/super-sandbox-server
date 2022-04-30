@@ -12,6 +12,7 @@ import { join } from 'path';
 import { IFile } from 'src/common/IFile';
 import { Repository } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { sign } from 'jsonwebtoken';
 import { MimeMap } from './consts';
 import { File } from './file.entity';
 
@@ -68,5 +69,12 @@ export class FileService {
     });
 
     return foundOne;
+  }
+
+  async genToken(params: any) {
+    const office = this.configService.get('app.office');
+    return sign(params, office.secret, {
+      expiresIn: '7d'
+    });
   }
 }

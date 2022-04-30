@@ -3,3 +3,6 @@ version: 1.0
 srvname: 'Shared-Srv'
 
 host: 'wx.jiangqiu.com'
+
+office:
+  secret: jwt_secret

@@ -87,6 +87,7 @@ export class CourseService {
         course.courseName = dto.courseName;
         course.fileUUID = dto.fileUUID;
         course.courseType = foundFile.fileType;
+        course.categoryKey = dto.categoryKey;
 
         const result = await this.courseRepository.save(course);
 

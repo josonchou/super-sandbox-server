@@ -1,9 +1,9 @@
 address: localhost
 
-database: shared
+database: onlyoffice
 
-username: root
+username: onlyoffice_user
 
-password: qazWSX123=-
+password: onlyoffice_pass
 
-port: 3306
+port: 33006

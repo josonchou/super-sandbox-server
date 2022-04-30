@@ -106,4 +106,30 @@ export class CourseController {
             trainingCategory: TrainingCategory,
         };
     }
+
+    @Get('/training/second/category')
+    @BackendApi()
+    @ApiOperation({ summary: '获取所有二级分类' })
+    async getAllSecondTrainingItems (@Query('keywords') keywords: string) {
+        let list = [];
+        TrainingCategory.map((item) => {
+            list = [...list, ...(item.children ?? [])] as any;
+        });
+
+        const filter = (list: any[], kwds: string) => {
+            return list.filter((item: any) => {
+                const isKeep = item?.name?.includes(kwds);
+                if (isKeep && item?.children && item?.children?.length) {
+                    item.children = filter(item?.children, kwds);
+                }
+                return isKeep;
+            });
+        }
+
+        if (keywords) {
+            return filter(list, keywords);
+        }
+        
+        return list;
+    };
 }

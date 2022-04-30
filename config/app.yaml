@@ -2,7 +2,12 @@ version: 1.0
 
 srvname: 'Shared-Srv'
 
-host: 'wx.jiangqiu.com'
+host: '172.28.49.141'
+
+office:
+  host: '172.28.49.141'
+  port: 8090
+  secret: jwt_secret
 
 wechat:
   appId: wx28053319a0479029

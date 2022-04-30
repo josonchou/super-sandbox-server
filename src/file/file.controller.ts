@@ -5,6 +5,7 @@
  */
 
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -16,6 +17,8 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { AuthPublic } from 'src/auth';
+import { BackendApi } from 'src/auth/guard';
+
 import { IFile } from 'src/common/IFile';
 import { FileService } from './file.service';
 
@@ -48,5 +51,11 @@ export class FileController {
       res.send('Error File');
     }
     res.sendFile(file.originPath);
+  }
+
+  @Post('reader/token')
+  @BackendApi()
+  async reader(@Body() config: any) {
+    return this.fileService.genToken(config);
   }
 }

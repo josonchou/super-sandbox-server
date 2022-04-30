@@ -7,6 +7,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -40,5 +41,14 @@ export class GuardController {
       token,
       admin,
     };
+  }
+
+  @AuthPublic()
+  @Get('ping')
+  @ApiOperation({ summary: 'check connect' })
+  async connect() {
+    return {
+      connect: 'pong',
+    }
   }
 }

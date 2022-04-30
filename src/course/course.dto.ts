@@ -17,6 +17,15 @@ export class CreateCourseDTO {
     @IsNotEmpty()
     @IsString()
     fileUUID: string;
+
+
+    @ApiProperty({
+        description: '分类ID',
+        required: true,
+    })
+    @IsNotEmpty()
+    @IsString()
+    categoryKey: string;
 }
 
 export class BatchRemoveDTO {
