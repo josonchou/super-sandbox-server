@@ -18,8 +18,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { AuthPublic } from 'src/auth';
 import { BackendApi } from 'src/auth/guard';
+import { BadReqException } from 'src/common/BadReqException';
 
-import { IFile } from 'src/common/IFile';
+import { FileSnippetExtParams, IFile, MergeFileInfo } from 'src/common/IFile';
 import { FileService } from './file.service';
 
 @Controller('files')
@@ -40,6 +41,29 @@ export class FileController {
       uuid: savedFile.uuid,
       viewPath: `http://${host}/srv/files/view/${savedFile.uuid}`,
     };
+  }
+
+  @Post('snippet/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadSnippet(@UploadedFile() file: IFile, @Body() ext: FileSnippetExtParams) {
+    const [uploadOk, msg] = await this.fileService.saveSnippet(file, ext);
+    if (!uploadOk) {
+      throw new BadReqException(msg || '上传失败');
+    }
+    return true;
+    // console.log(ext);
+    return true;
+  }
+
+  @Post('snippet/merge')
+  async snippetMerge(@Body() data: MergeFileInfo) {
+    const [ok, file] = await this.fileService.mergeSnippet(data);
+
+    if (!ok) {
+      throw new BadReqException(file as string);
+    }
+
+    return file;
   }
 
   @Get('view/:uuid')

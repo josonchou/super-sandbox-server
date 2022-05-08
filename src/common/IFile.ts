@@ -12,3 +12,15 @@ export interface IFile {
   buffer: Buffer;
   mimetype: string;
 }
+
+// 文件切片参数
+export interface FileSnippetExtParams {
+  hash?: string;
+  index?: number;
+}
+
+export interface MergeFileInfo {
+  hash: string;
+  total: number;
+  originFilename: string;
+}

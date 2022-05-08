@@ -4,6 +4,7 @@ export const MimeMap = {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
     'text/csv': 'csv',
     'video/mpeg': 'mpeg',
+    'video/mp4': 'mp4',
     'audio/mpeg': 'mp3',
     'application/pdf': 'pdf',
     'application/vnd.ms-powerpoint': 'ppt',

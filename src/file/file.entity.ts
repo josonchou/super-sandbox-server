@@ -43,6 +43,9 @@ export class File extends CommonEntity {
   @Column({ name: 'mimetype' })
   mimetype: string;
 
+  @Column({ name: 'hash' })
+  hash: string;
+
   toJSON() {
     let host = 'wx.jiangqiu.com';
     if (this.host) {

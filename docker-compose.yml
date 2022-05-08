@@ -41,6 +41,9 @@ services:
        - ./data/document_data:/var/www/onlyoffice/Data
        - ./data/logs/document_server:/var/log/onlyoffice
        - ./assets/fonts:/usr/share/fonts/truetype/custom
+       - ./data/web-apps/presentationeditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor/main/index.html
+       - ./data/web-apps/documenteditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/documenteditor/main/index.html
+       - ./data/web-apps/spreadsheeteditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/spreadsheeteditor/main/index.html
        - ./data/document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
   onlyoffice-control-panel:
     container_name: onlyoffice-control-panel
@@ -61,20 +64,22 @@ services:
       - onlyoffice
     stdin_open: true
     tty: true
-  api-server:
-    container_name: api-server
-    depends_on:
-      - onlyoffice-document-server
-      - onlyoffice-mysql-server
-    build: ./
-    expose:
-      - '3000'
-    ports:
-      - '3000:3000'
-    networks:
-      - onlyoffice
-    volumes:
-      - ./config:/usr/app/config
+  # api-server:
+  #   container_name: api-server
+  #   depends_on:
+  #     - onlyoffice-document-server
+  #     - onlyoffice-mysql-server
+  #   build: ./
+  #   expose:
+  #     - '3000'
+  #   ports:
+  #     - '3000:3000'
+  #   networks:
+  #     - onlyoffice
+  #   volumes:
+  #     - ./config:/usr/app/config
+  #     - ./src:/usr/app/src
+  #     - ./storage:/usr/app/storage
   # super-sandbox-nginx:
   #   container_name: super-sandbox-nginx
   #   image: nginx:1.21.6
