@@ -67,7 +67,7 @@ services:
   api-server:
     container_name: api-server
     restart: always
-    image: josonchou/super-sandbox-srv:1.0
+    image: josonchou/super-sandbox-srv:1.0.1
     depends_on:
       - onlyoffice-document-server
       - onlyoffice-mysql-server
