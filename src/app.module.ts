@@ -13,9 +13,11 @@ import { AuthGuard } from './auth/guard';
 import loadYamlConfig from './common/loadYamlConfig';
 import { AppService } from './app.service';
 import { CourseModule } from './course/course.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,

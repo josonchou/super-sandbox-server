@@ -23,7 +23,7 @@ export class AdminController {
   @Post('gen/super/admin')
   @ApiOperation({ summary: '生成超级管理员' })
   @AuthPublic()
-  // @ApiBan()
+  @ApiBan()
   async genSuperAdmin() {
     const { id } = await this.adminService.createSuperAdmin();
     return {

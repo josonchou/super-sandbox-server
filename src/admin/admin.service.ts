@@ -41,6 +41,23 @@ export class AdminService {
     return hash;
   }
 
+  // @OnEvent('admin.init', { async: true })
+  async initAdmin() {
+    const foundOne = await this.settingRepository.findOne({
+      name: 'isInitial',
+    });
+
+    if (foundOne && foundOne.value === 'true') {
+      return true;
+    }
+    const setting = new Setting();
+    setting.name = 'isInitial';
+    setting.value = 'true';
+    await this.createSuperAdmin();
+    await this.settingRepository.save(setting);
+    return true;
+  }
+
   /**
    * 生成超级管理员
    */
@@ -49,6 +66,7 @@ export class AdminService {
     const admin = new Admin();
     admin.username = 'root';
     admin.nickname = '超级管理员';
+    admin.role = 1;
     const adminPassword = new AdminPassword();
     const hash = await this.genPassword(plainPassword);
 

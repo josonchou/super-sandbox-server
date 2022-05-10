@@ -3,6 +3,7 @@ services:
   onlyoffice-mysql-server:
     container_name: onlyoffice-mysql-server
     image: mysql:5.7
+    platform: linux/amd64
     environment:
       - MYSQL_ROOT_PASSWORD=my-secret-pw
     networks:
@@ -64,22 +65,23 @@ services:
       - onlyoffice
     stdin_open: true
     tty: true
-  api-server:
-    container_name: api-server
-    depends_on:
-      - onlyoffice-document-server
-      - onlyoffice-mysql-server
-    build: ./
-    expose:
-      - '3000'
-    ports:
-      - '3000:3000'
-    networks:
-      - onlyoffice
-    volumes:
-      - ./config:/usr/app/config
-      - ./src:/usr/app/src
-      - ./storage:/usr/app/storage
+  # api-server:
+  #   container_name: api-server
+  #   restart: always
+  #   depends_on:
+  #     - onlyoffice-document-server
+  #     - onlyoffice-mysql-server
+  #   build: ./
+  #   expose:
+  #     - '3000'
+  #   ports:
+  #     - '3000:3000'
+  #   networks:
+  #     - onlyoffice
+  #   volumes:
+  #     - ./config:/usr/app/config
+  #     - ./src:/usr/app/src
+  #     - ./storage:/usr/app/storage
   # super-sandbox-nginx:
   #   container_name: super-sandbox-nginx
   #   image: nginx:1.21.6
