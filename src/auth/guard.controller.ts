@@ -4,12 +4,7 @@
  * @copyright:  © 2021
  */
 
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AuthPublic } from './guard';
@@ -49,6 +44,6 @@ export class GuardController {
   async connect() {
     return {
       connect: 'pong',
-    }
+    };
   }
 }

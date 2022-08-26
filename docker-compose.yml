@@ -2,9 +2,10 @@ version: '3'
 services:
   onlyoffice-mysql-server:
     container_name: onlyoffice-mysql-server
-    image: mysql:5.7
+    image: mariadb:10.2
     environment:
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      # - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MARIADB_ROOT_PASSWORD=my-secret-pw
     networks:
       - onlyoffice
     stdin_open: true
@@ -18,58 +19,57 @@ services:
       - ./config/mysql/conf.d:/etc/mysql/conf.d
       - ./config/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./data/db:/var/lib/mysql
-  onlyoffice-document-server:
-    container_name: onlyoffice-document-server
-    image: onlyoffice/documentserver:6.0.2
-    stdin_open: true
-    tty: true
-    restart: always
-    depends_on:
-      - onlyoffice-mysql-server
-    environment:
-      - JWT_ENABLED=true
-      - JWT_SECRET=jwt_secret
-      - JWT_HEADER=AuthorizationJwt
-    networks:
-      - onlyoffice
-    ports:
-      - '9080:80'
-    expose:
-      - '80'
-      - '443'
-    volumes:
-       - ./data/document_data:/var/www/onlyoffice/Data
-       - ./data/logs/document_server:/var/log/onlyoffice
-       - ./assets/fonts:/usr/share/fonts/truetype/custom
-       - ./data/web-apps/presentationeditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor/main/index.html
-       - ./data/web-apps/documenteditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/documenteditor/main/index.html
-       - ./data/web-apps/spreadsheeteditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/spreadsheeteditor/main/index.html
-       - ./data/document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
-  onlyoffice-control-panel:
-    container_name: onlyoffice-control-panel
-    depends_on:
-     - onlyoffice-document-server
-    image: onlyoffice/controlpanel:2.9.0.351
-    environment:
-     - ONLYOFFICE_CORE_MACHINEKEY=core_secret
-    expose:
-      - '80'
-      - '443'
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/controlpanel_data:/var/www/onlyoffice/Data
-      - ./data/controlpanel_log:/var/log/onlyoffice
-    networks:
-      - onlyoffice
-    stdin_open: true
-    tty: true
+  # onlyoffice-document-server:
+  #   container_name: onlyoffice-document-server
+  #   image: onlyoffice/documentserver:7.0
+  #   stdin_open: true
+  #   tty: true
+  #   restart: always
+  #   depends_on:
+  #     - onlyoffice-mysql-server
+  #   environment:
+  #     - JWT_ENABLED=true
+  #     - JWT_SECRET=jwt_secret
+  #     - JWT_HEADER=AuthorizationJwt
+  #   networks:
+  #     - onlyoffice
+  #   ports:
+  #     - '9080:80'
+  #   expose:
+  #     - '80'
+  #     - '443'
+  #   volumes:
+  #      - ./data/document_data:/var/www/onlyoffice/Data
+  #      - ./data/logs/document_server:/var/log/onlyoffice
+  #      - ./assets/fonts:/usr/share/fonts/truetype/custom
+  #      - ./data/web-apps/presentationeditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/presentationeditor/main/index.html
+  #      - ./data/web-apps/documenteditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/documenteditor/main/index.html
+  #      - ./data/web-apps/spreadsheeteditor/index.html:/var/www/onlyoffice/documentserver/web-apps/apps/spreadsheeteditor/main/index.html
+  #      - ./data/document_forgotten:/var/lib/onlyoffice/documentserver/App_Data/cache/files/forgotten
+  # onlyoffice-control-panel:
+  #   container_name: onlyoffice-control-panel
+  #   depends_on:
+  #    - onlyoffice-document-server
+  #   image: onlyoffice/controlpanel:2.9.0.351
+  #   environment:
+  #    - ONLYOFFICE_CORE_MACHINEKEY=core_secret
+  #   expose:
+  #     - '80'
+  #     - '443'
+  #   restart: always
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./data/controlpanel_data:/var/www/onlyoffice/Data
+  #     - ./data/controlpanel_log:/var/log/onlyoffice
+  #   networks:
+  #     - onlyoffice
+  #   stdin_open: true
+  #   tty: true
   api-server:
     container_name: api-server
     restart: always
     image: josonchou/super-sandbox-srv:1.0.1
     depends_on:
-      - onlyoffice-document-server
       - onlyoffice-mysql-server
     # build: ./
     expose:
@@ -100,7 +100,7 @@ services:
   #     - '9080:80'
   #   expose:
   #     - '80'
-    
+
 networks:
   onlyoffice:
     driver: 'bridge'

@@ -45,7 +45,10 @@ export class FileController {
 
   @Post('snippet/upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadSnippet(@UploadedFile() file: IFile, @Body() ext: FileSnippetExtParams) {
+  async uploadSnippet(
+    @UploadedFile() file: IFile,
+    @Body() ext: FileSnippetExtParams,
+  ) {
     const [uploadOk, msg] = await this.fileService.saveSnippet(file, ext);
     if (!uploadOk) {
       throw new BadReqException(msg || '上传失败');

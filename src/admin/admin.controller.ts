@@ -4,14 +4,27 @@
  * @copyright:  © 2021
  */
 
-import { Body, Controller, Delete, Get, Post, Put, Query, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { ApiBan, AuthPublic } from 'src/auth';
 import { BackendApi } from 'src/auth/guard';
 import Ability from 'src/constanst/ability';
 import TrainingCategory from 'src/constanst/trainingCategory';
-import { BatchRemoveUsers, CreateUserDTO, UpdateAdminPasswordDTO } from './admin.dto';
+import {
+  BatchRemoveUsers,
+  CreateUserDTO,
+  UpdateAdminPasswordDTO,
+} from './admin.dto';
 import { Admin } from './admin.entity';
 import { AdminService } from './admin.service';
 
@@ -47,9 +60,7 @@ export class AdminController {
 
   @Get('/userInfo')
   @BackendApi()
-  async getUserInfo(
-    @Req() req: Request,
-  ) {
+  async getUserInfo(@Req() req: Request) {
     const loginAdmin = req.app.get('loginAdmin') as Admin;
 
     const admin = await this.adminService.getAdminInfo(loginAdmin.id);
@@ -64,13 +75,8 @@ export class AdminController {
   @Post('/users')
   @ApiOperation({ summary: '创建用户' })
   @BackendApi()
-  async createAdmin(
-    @Body() dto: CreateUserDTO,
-  ) {
-    const { id } = await this.adminService.createAdmin(
-      dto.username,
-      dto.role,
-    );
+  async createAdmin(@Body() dto: CreateUserDTO) {
+    const { id } = await this.adminService.createAdmin(dto.username, dto.role);
 
     return id;
   }
@@ -81,7 +87,7 @@ export class AdminController {
   @ApiParam({
     name: 'username',
     required: false,
-    description: '账号'
+    description: '账号',
   })
   async getUsers(
     @Query('page') page: number,

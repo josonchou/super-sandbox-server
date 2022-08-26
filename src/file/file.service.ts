@@ -7,7 +7,16 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { createWriteStream, rmdir, existsSync, mkdirSync, readdir, readFile, WriteStream, statSync } from 'fs';
+import {
+  createWriteStream,
+  rmdir,
+  existsSync,
+  mkdirSync,
+  readdir,
+  readFile,
+  WriteStream,
+  statSync,
+} from 'fs';
 import { join } from 'path';
 import { FileSnippetExtParams, IFile, MergeFileInfo } from 'src/common/IFile';
 import { Repository } from 'typeorm';
@@ -18,7 +27,7 @@ import { File } from './file.entity';
 
 const mime = require('mime');
 
-function readdirPromise (...args: any[]): Promise<string[]> {
+function readdirPromise(...args: any[]): Promise<string[]> {
   return new Promise((resolve, reject) => {
     // @ts-ignore
     readdir(...args, (err, files) => {
@@ -50,7 +59,7 @@ const getExt = (originalname: string) => {
   }
 
   return ext;
-}
+};
 
 const UploadPath = join(__dirname, '../../', 'storage');
 
@@ -95,7 +104,10 @@ export class FileService {
     return await this.fileRepository.save(fileEntity);
   }
 
-  async saveSnippet(file: IFile, ext: FileSnippetExtParams): Promise<[boolean, string]> {
+  async saveSnippet(
+    file: IFile,
+    ext: FileSnippetExtParams,
+  ): Promise<[boolean, string]> {
     // TODO 检测文件是否已经存在
     const { hash } = ext;
 
@@ -114,7 +126,7 @@ export class FileService {
     }
 
     const chunksFilename = join(chunksDir, `${ext.hash}_${ext.index}`);
-    
+
     // 秒传，如果切片已存在，则直接返回
     if (existsSync(chunksFilename)) {
       return [true, ''];
@@ -126,7 +138,7 @@ export class FileService {
         writeAble.write(file.buffer, (err) => {
           if (err) {
             reject(err);
-            
+
             writeAble.close();
             return;
           }
@@ -144,13 +156,15 @@ export class FileService {
     return [true, ''];
   }
 
-  async mergeSnippet(mergeInfo: MergeFileInfo): Promise<[boolean, string|File]> {
+  async mergeSnippet(
+    mergeInfo: MergeFileInfo,
+  ): Promise<[boolean, string | File]> {
     try {
       const { hash, total, originFilename } = mergeInfo;
       const existsFile = await this.fileRepository.findOne({
         hash,
       });
-  
+
       if (existsFile) {
         return [true, existsFile];
       }
@@ -168,28 +182,30 @@ export class FileService {
       const writeAble = createWriteStream(absPath);
       for (let i = 0; i <= files.length; i++) {
         if (i === files.length) {
-          await (() => new Promise((resolve, reject) => {
-            rmdir(chunksDir, (err) => {
-              if (err) {
-                console.log(err);
-                resolve(true);
-              } else {
-                resolve(true);
-              }
-            })
-          }))();
+          await (() =>
+            new Promise((resolve, reject) => {
+              rmdir(chunksDir, (err) => {
+                if (err) {
+                  console.log(err);
+                  resolve(true);
+                } else {
+                  resolve(true);
+                }
+              });
+            }))();
           break;
         }
         const chunkPath = join(chunksDir, `${hash}_${i}`);
-        const fileBuffer = await (() => new Promise((resolve, reject) => {
-          readFile(chunkPath, (err, data) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(data);
-            }
-          })
-        }))()
+        const fileBuffer = await (() =>
+          new Promise((resolve, reject) => {
+            readFile(chunkPath, (err, data) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(data);
+              }
+            });
+          }))();
         await doWriteFile(writeAble, fileBuffer);
       }
       writeAble.close();
@@ -216,7 +232,6 @@ export class FileService {
     } catch (e) {
       return [false, e?.message];
     }
-
   }
 
   async getFile(uuid: string) {
@@ -232,7 +247,7 @@ export class FileService {
   async genToken(params: any) {
     const office = this.configService.get('app.office');
     return sign(params, office.secret, {
-      expiresIn: '7d'
+      expiresIn: '7d',
     });
   }
 }

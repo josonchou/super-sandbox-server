@@ -117,7 +117,7 @@ export class AdminService {
     const user = await this.adminRepository.findOne({
       username: username,
     });
-    
+
     if (user && user.id) {
       throw new BadReqException('该用户已存在');
     }
@@ -152,7 +152,7 @@ export class AdminService {
 
     if (query.username) {
       queryBuilder.andWhere('admin.username LIKE :keywords', {
-        keywords: `%${query.username}%`
+        keywords: `%${query.username}%`,
       });
     }
 

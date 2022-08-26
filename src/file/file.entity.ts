@@ -36,7 +36,6 @@ export class File extends CommonEntity {
   @Column({ name: 'host' })
   host: string;
 
-
   @Column({ name: 'fileType' })
   fileType: string;
 
