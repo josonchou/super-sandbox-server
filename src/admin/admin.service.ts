@@ -8,6 +8,7 @@ import { Setting } from './setting.entity';
 import { BadReqException } from 'src/common/BadReqException';
 import { CommonQuery } from 'src/common/CommonQuery';
 import { genPaginationParams } from 'src/common/utils';
+import { CategoryService } from 'src/category/category.service';
 
 /*
  * @description: 管理员
@@ -23,6 +24,8 @@ export class AdminService {
     private readonly adminPasswordRepository: Repository<AdminPassword>,
     @InjectRepository(Setting)
     private readonly settingRepository: Repository<Setting>,
+
+    private readonly categoryService: CategoryService,
   ) {}
 
   /**
@@ -47,14 +50,29 @@ export class AdminService {
       name: 'isInitial',
     });
 
-    if (foundOne && foundOne.value === 'true') {
-      return true;
+    if (!foundOne || foundOne.value !== 'true') {
+      const setting = new Setting();
+      setting.name = 'isInitial';
+      setting.value = 'true';
+      await this.createSuperAdmin();
+      await this.settingRepository.save(setting);
     }
-    const setting = new Setting();
-    setting.name = 'isInitial';
-    setting.value = 'true';
-    await this.createSuperAdmin();
-    await this.settingRepository.save(setting);
+
+    try {
+      const foundInitCategory = await this.settingRepository.findOne({
+        name: 'isInitialCategory',
+      });
+
+      if (!foundInitCategory || foundInitCategory.value !== 'true') {
+        const setting2 = new Setting();
+        setting2.name = 'isInitialCategory';
+        setting2.value = 'true';
+        await this.categoryService.initCategory();
+        await this.settingRepository.save(setting2);
+      }
+    } catch (e) {
+      console.warn('初始化分类失败', e);
+    }
     return true;
   }
 

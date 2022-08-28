@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiParam } from '@nestjs/swagger';
 import { BackendApi } from 'src/auth/guard';
-import Ability from 'src/constanst/ability';
+import { CategoryService } from 'src/category/category.service';
 import TrainingCategory, {
   getCategoryByKey,
 } from 'src/constanst/trainingCategory';
@@ -10,7 +10,10 @@ import { CourseService } from './course.service';
 
 @Controller('courses')
 export class CourseController {
-  constructor(private readonly courseService: CourseService) {}
+  constructor(
+    private readonly courseService: CourseService,
+    private readonly categoryService: CategoryService,
+  ) {}
 
   @Get('/list')
   @BackendApi()
@@ -95,15 +98,18 @@ export class CourseController {
   @BackendApi()
   @ApiOperation({ summary: '获取能力总表' })
   async getAllAbilityCategory() {
-    return Ability;
+    const ability = await this.categoryService.getAbility();
+    return ability;
   }
 
   @Get('/training/category')
   @BackendApi()
   @ApiOperation({ summary: '获取培训分类' })
   async getTrainingCategory() {
+    const trainingCategory = await this.categoryService.getTrainingCategory();
+
     return {
-      trainingCategory: TrainingCategory,
+      trainingCategory,
     };
   }
 
@@ -111,24 +117,25 @@ export class CourseController {
   @BackendApi()
   @ApiOperation({ summary: '获取所有二级分类' })
   async getAllSecondTrainingItems(@Query('keywords') keywords: string) {
-    let list = [];
-    TrainingCategory.map((item) => {
-      list = [...list, ...(item.children ?? [])] as any;
-    });
+    const list = await this.categoryService.getAllSecondTrainingItems(keywords);
+    // let list = [];
+    // TrainingCategory.map((item) => {
+    //   list = [...list, ...(item.children ?? [])] as any;
+    // });
 
-    const filter = (list: any[], kwds: string) => {
-      return list.filter((item: any) => {
-        const isKeep = item?.name?.includes(kwds);
-        if (isKeep && item?.children && item?.children?.length) {
-          item.children = filter(item?.children, kwds);
-        }
-        return isKeep;
-      });
-    };
+    // const filter = (list: any[], kwds: string) => {
+    //   return list.filter((item: any) => {
+    //     const isKeep = item?.name?.includes(kwds);
+    //     if (isKeep && item?.children && item?.children?.length) {
+    //       item.children = filter(item?.children, kwds);
+    //     }
+    //     return isKeep;
+    //   });
+    // };
 
-    if (keywords) {
-      return filter(list, keywords);
-    }
+    // if (keywords) {
+    //   return filter(list, keywords);
+    // }
 
     return list;
   }

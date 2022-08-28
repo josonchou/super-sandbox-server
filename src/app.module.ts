@@ -14,6 +14,8 @@ import loadYamlConfig from './common/loadYamlConfig';
 import { AppService } from './app.service';
 import { CourseModule } from './course/course.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { CategoryModule } from './category/category.module';
+import { CategoryService } from './category/category.service';
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     GuardModule,
     AdminModule,
     CourseModule,
+    CategoryModule,
   ],
   providers: [
     {

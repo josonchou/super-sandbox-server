@@ -18,8 +18,7 @@ import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { ApiBan, AuthPublic } from 'src/auth';
 import { BackendApi } from 'src/auth/guard';
-import Ability from 'src/constanst/ability';
-import TrainingCategory from 'src/constanst/trainingCategory';
+import { CategoryService } from 'src/category/category.service';
 import {
   BatchRemoveUsers,
   CreateUserDTO,
@@ -31,7 +30,10 @@ import { AdminService } from './admin.service';
 @Controller('admin')
 @ApiTags('管理员模块')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly categoryService: CategoryService,
+  ) {}
 
   @Post('gen/super/admin')
   @ApiOperation({ summary: '生成超级管理员' })
@@ -64,11 +66,12 @@ export class AdminController {
     const loginAdmin = req.app.get('loginAdmin') as Admin;
 
     const admin = await this.adminService.getAdminInfo(loginAdmin.id);
-
+    const ability = await this.categoryService.getAbility();
+    const trainingCategory = await this.categoryService.getTrainingCategory();
     return {
       userInfo: admin,
-      ability: Ability,
-      trainingCategory: TrainingCategory,
+      ability,
+      trainingCategory,
     };
   }
 
