@@ -80,7 +80,7 @@ services:
       - onlyoffice
     volumes:
       - ./config:/usr/app/config
-      # - ./src:/usr/app/src
+      - ./src:/usr/app/src
       - ./storage:/usr/app/storage
   # super-sandbox-nginx:
   #   container_name: super-sandbox-nginx
