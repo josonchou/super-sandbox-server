@@ -20,7 +20,7 @@ COPY . .
 RUN npm run build
 
 
-VOLUME /usr/app/config /usr/app/storage /usr/app/node_modules
+VOLUME /usr/app/config /usr/app/storage /usr/app/node_modules /usr/app/src
 
 EXPOSE 3000
 
