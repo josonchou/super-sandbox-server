@@ -25,6 +25,10 @@ services:
     stdin_open: true
     tty: true
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 2G
     depends_on:
       - onlyoffice-mysql-server
     environment:
@@ -68,7 +72,7 @@ services:
   api-server:
     container_name: api-server
     restart: always
-    image: josonchou/super-sandbox-srv:1.0.1
+    image: josonchou/super-sandbox-srv:2.0.2
     depends_on:
       - onlyoffice-mysql-server
     # build: ./
